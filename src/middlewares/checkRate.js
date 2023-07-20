@@ -24,6 +24,24 @@ const checkRate = (req, res, next) => {
   next();
 };
 
+const checkBodyRate = (req, res, next) => {
+  const { rate } = req.body;
+
+  if (rate === undefined) {
+    return res.status(400).json({ message: 'O campo "rate" é obrigatório' });
+  }
+
+  const isValid = validateRate(rate);
+
+  if (!isValid) {
+    return res.status(400).json({
+      message: 'O campo "rate" deve ser um número inteiro entre 1 e 5',
+    });
+  }
+
+  next();
+};
+
 const filterByRateQuery = (req, res, next) => {
   const { rate } = req.query;
   const data = req.filteredData;
@@ -46,4 +64,5 @@ const filterByRateQuery = (req, res, next) => {
 module.exports = {
   checkRate,
   filterByRateQuery,
+  checkBodyRate,
 };

@@ -6,7 +6,7 @@ const { checkName, filterByNameQuery } = require('../middlewares/checkName');
 const checkAge = require('../middlewares/checkAge');
 const checkTalk = require('../middlewares/checkTalk');
 const { checkWatchedAt, filterByDateQuery } = require('../middlewares/checkWatchedAt');
-const { checkRate, filterByRateQuery } = require('../middlewares/checkRate');
+const { checkRate, filterByRateQuery, checkBodyRate } = require('../middlewares/checkRate');
 
 const TALKER_FILE_PATH = join(__dirname, '..', 'talker.json');
 
@@ -46,6 +46,25 @@ talkerRoute.delete('/:id', checkToken, async (req, res) => {
   const { id } = req.params;
 
   await deleteObject(TALKER_FILE_PATH, id);
+
+  res.status(204).end();
+});
+
+talkerRoute.patch('/rate/:id', checkToken, checkBodyRate, async (req, res) => {
+  const { id } = req.params;
+  const { rate } = req.body;
+
+  const talkerToUpdate = await getById(TALKER_FILE_PATH, id);
+
+  const updatedTalker = {
+    ...talkerToUpdate,
+    talk: {
+      rate,
+      watchedAt: talkerToUpdate.talk.watchedAt,
+    },
+  };
+
+  await updateObject(TALKER_FILE_PATH, id, updatedTalker);
 
   res.status(204).end();
 });
