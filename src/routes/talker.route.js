@@ -17,6 +17,16 @@ talkerRoute.get('/', async (_req, res) => {
   res.status(200).json(data);
 });
 
+talkerRoute.get('/search', checkToken, async (req, res) => {
+  const { q } = req.query || '';
+
+  const data = await getData(TALKER_FILE_PATH);
+
+  const filteredData = data.filter((talker) => talker.name.toLowerCase().includes(q.toLowerCase()));
+
+  res.status(200).json(filteredData);
+});
+
 talkerRoute.get('/:id', async (req, res) => {
   const { id } = req.params;
   const data = await getData(TALKER_FILE_PATH);
@@ -30,9 +40,7 @@ talkerRoute.get('/:id', async (req, res) => {
   return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
 });
 
-talkerRoute.use(checkToken);
-
-talkerRoute.delete('/:id', async (req, res) => {
+talkerRoute.delete('/:id', checkToken, async (req, res) => {
   const { id } = req.params;
 
   await deleteObject(TALKER_FILE_PATH, id);
@@ -40,7 +48,7 @@ talkerRoute.delete('/:id', async (req, res) => {
   res.status(204).end();
 });
 
-talkerRoute.use(checkName, checkAge, checkTalk, checkWatchedAt, checkRate);
+talkerRoute.use(checkToken, checkName, checkAge, checkTalk, checkWatchedAt, checkRate);
 
 talkerRoute.post('/', async (req, res) => {
   const newTalker = req.body;
@@ -55,8 +63,6 @@ talkerRoute.put('/:id', async (req, res) => {
   const newTalker = req.body;
 
   const talkerToUpdate = await getById(TALKER_FILE_PATH, id);
-
-  console.log(talkerToUpdate);
 
   if (talkerToUpdate === undefined) {
     return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
