@@ -1,6 +1,6 @@
 const express = require('express');
 const { join } = require('path');
-const { getData, saveNewObject, getById, updateObject } = require('../utils/data');
+const { getData, saveNewObject, getById, updateObject, deleteObject } = require('../utils/data');
 const checkToken = require('../middlewares/checkToken');
 const checkName = require('../middlewares/checkName');
 const checkAge = require('../middlewares/checkAge');
@@ -30,7 +30,17 @@ talkerRoute.get('/:id', async (req, res) => {
   return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
 });
 
-talkerRoute.use(checkToken, checkName, checkAge, checkTalk, checkWatchedAt, checkRate);
+talkerRoute.use(checkToken);
+
+talkerRoute.delete('/:id', async (req, res) => {
+  const { id } = req.params;
+
+  await deleteObject(TALKER_FILE_PATH, id);
+
+  res.status(204).end();
+});
+
+talkerRoute.use(checkName, checkAge, checkTalk, checkWatchedAt, checkRate);
 
 talkerRoute.post('/', async (req, res) => {
   const newTalker = req.body;

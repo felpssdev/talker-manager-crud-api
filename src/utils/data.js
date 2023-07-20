@@ -42,9 +42,18 @@ const updateObject = async (path, id, newObject) => {
   return newObjectWithId;
 };
 
+const deleteObject = async (path, id) => {
+  const data = await getData(path);
+
+  const filteredData = data.filter((obj) => obj.id !== Number(id));
+
+  await fs.writeFile(path, JSON.stringify(filteredData));
+};
+
 module.exports = {
   saveNewObject,
   getData,
   getById,
   updateObject,
+  deleteObject,
 };
