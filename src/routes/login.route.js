@@ -8,7 +8,7 @@ const loginRoute = express.Router();
 loginRoute.use(checkEmail, checkPassword);
 
 loginRoute.post('/', (req, res) => {
-  const { email, password } = req.body;
+  // const { email, password } = req.body;
 
   const randomID = crypto.randomBytes(16).toString('ascii');
 
