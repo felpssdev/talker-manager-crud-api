@@ -15,11 +15,7 @@ talkerRoute.get('/:id', async (req, res) => {
   const { id } = req.params;
   const data = await getData(TALKER_FILE_PATH);
 
-  console.log(id);
-
   const filteredData = data.find((talker) => talker.id === Number(id));
-
-  console.log(filteredData);
 
   if (filteredData) {
     return res.status(200).json(filteredData);
