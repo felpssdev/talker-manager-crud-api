@@ -6,7 +6,7 @@ const checkName = require('../middlewares/checkName');
 const checkAge = require('../middlewares/checkAge');
 const checkTalk = require('../middlewares/checkTalk');
 const checkWatchedAt = require('../middlewares/checkWatchedAt');
-const checkRate = require('../middlewares/checkRate');
+const { checkRate, checkRateQuery } = require('../middlewares/checkRate');
 
 const TALKER_FILE_PATH = join(__dirname, '..', 'talker.json');
 
@@ -17,12 +17,19 @@ talkerRoute.get('/', async (_req, res) => {
   res.status(200).json(data);
 });
 
-talkerRoute.get('/search', checkToken, async (req, res) => {
-  const { q } = req.query || '';
+talkerRoute.get('/search', checkToken, checkRateQuery, async (req, res) => {
+  const { q, rate } = req.query;
+
+  const nameQuery = q || '';
 
   const data = await getData(TALKER_FILE_PATH);
 
-  const filteredData = data.filter((talker) => talker.name.toLowerCase().includes(q.toLowerCase()));
+  let filteredData = data
+    .filter((talker) => talker.name.toLowerCase().includes(nameQuery.toLowerCase()));
+
+  if (rate) {
+    filteredData = filteredData.filter((talker) => talker.talk.rate === Number(rate));
+  }
 
   res.status(200).json(filteredData);
 });
