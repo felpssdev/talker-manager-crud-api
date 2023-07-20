@@ -24,8 +24,9 @@ const checkRate = (req, res, next) => {
   next();
 };
 
-const checkRateQuery = (req, res, next) => {
+const filterByRateQuery = (req, res, next) => {
   const { rate } = req.query;
+  const data = req.filteredData;
 
   if (rate) {
     const isValid = validateRate(Number(rate));
@@ -35,6 +36,8 @@ const checkRateQuery = (req, res, next) => {
         message: 'O campo "rate" deve ser um número inteiro entre 1 e 5',
       });
     }
+
+    req.filteredData = data.filter((talker) => talker.talk.rate === Number(rate));
   }
 
   next();
@@ -42,5 +45,5 @@ const checkRateQuery = (req, res, next) => {
 
 module.exports = {
   checkRate,
-  checkRateQuery,
+  filterByRateQuery,
 };

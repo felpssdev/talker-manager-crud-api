@@ -2,11 +2,11 @@ const express = require('express');
 const { join } = require('path');
 const { getData, saveNewObject, getById, updateObject, deleteObject } = require('../utils/data');
 const checkToken = require('../middlewares/checkToken');
-const checkName = require('../middlewares/checkName');
+const { checkName, filterByNameQuery } = require('../middlewares/checkName');
 const checkAge = require('../middlewares/checkAge');
 const checkTalk = require('../middlewares/checkTalk');
-const checkWatchedAt = require('../middlewares/checkWatchedAt');
-const { checkRate, checkRateQuery } = require('../middlewares/checkRate');
+const { checkWatchedAt, filterByDateQuery } = require('../middlewares/checkWatchedAt');
+const { checkRate, filterByRateQuery } = require('../middlewares/checkRate');
 
 const TALKER_FILE_PATH = join(__dirname, '..', 'talker.json');
 
@@ -17,22 +17,17 @@ talkerRoute.get('/', async (_req, res) => {
   res.status(200).json(data);
 });
 
-talkerRoute.get('/search', checkToken, checkRateQuery, async (req, res) => {
-  const { q, rate } = req.query;
+talkerRoute
+  .get('/search',
+    checkToken,
+    filterByNameQuery,
+    filterByRateQuery,
+    filterByDateQuery,
+    async (req, res) => {
+      const data = req.filteredData;
 
-  const nameQuery = q || '';
-
-  const data = await getData(TALKER_FILE_PATH);
-
-  let filteredData = data
-    .filter((talker) => talker.name.toLowerCase().includes(nameQuery.toLowerCase()));
-
-  if (rate) {
-    filteredData = filteredData.filter((talker) => talker.talk.rate === Number(rate));
-  }
-
-  res.status(200).json(filteredData);
-});
+      res.status(200).json(data);
+    });
 
 talkerRoute.get('/:id', async (req, res) => {
   const { id } = req.params;

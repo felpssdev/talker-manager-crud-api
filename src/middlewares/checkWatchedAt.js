@@ -20,4 +20,26 @@ const checkWatchedAt = (req, res, next) => {
   next();
 };
 
-module.exports = checkWatchedAt;
+const filterByDateQuery = (req, res, next) => {
+  const { date } = req.query;
+  const data = req.filteredData;
+
+  if (date) {
+    const isValid = checkDateValid(date);
+
+    if (!isValid) {
+      return res
+        .status(400).json({ message: 'O parâmetro "date" deve ter o formato "dd/mm/aaaa"' });
+    }
+
+    req.filteredData = data
+      .filter((obj) => obj.talk.watchedAt.toLowerCase().includes(date.toLowerCase()));
+  }
+
+  next();
+};
+
+module.exports = {
+  checkWatchedAt,
+  filterByDateQuery,
+};
