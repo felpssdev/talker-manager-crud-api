@@ -87,7 +87,7 @@ Once inside the container, you can interact with the server and database as need
 - Query Parameters (optional):
   - `name`: Filter Talkers by name.
   - `rate`: Filter Talkers by rate (integer).
-  - `watchedAt`: Filter Talkers by the watched date (string in format "YYYY-MM-DD").
+  - `watchedAt`: Filter Talkers by the watched date (string in format "dd/mm/yyyy").
 - Request Headers:
   - `Authorization`: Token required for authentication.
 - Response: JSON array containing filtered Talkers.
