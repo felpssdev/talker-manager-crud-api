@@ -21,17 +21,53 @@ This project is a CRUD (Create, Read, Update, Delete) server built using JavaScr
 - MySQL2 
 - JSON Web Tokens (JWT) for authentication
 
+## Installation
+
+To install the necessary dependencies, run the following command:
+
+```bash
+npm install
+```
+
 ## Configuration
 
-1. Ensure you have MongoDB (or any other desired database) installed and running on your machine.
-2. Update the database connection settings in the `config.js` file to point to your local or remote database.
-3. Set the JWT secret in the `config.js` file for secure token generation.
+1. Create a new file named `.env` in the root directory of the project.
+
+2. Add the following configurations to the `.env` file:
+
+```env
+# Port configuration
+PORT=3001
+MYSQL_PORT=3306
+
+# Database configuration
+MYSQL_HOST=localhost
+MYSQL_USER=your_mysql_username
+MYSQL_PASSWORD=your_mysql_password
+MYSQL_DATABASE=your_database_name
+```
+
+Replace `your_mysql_username`, `your_mysql_password`, and `your_database_name` with your MySQL credentials and desired database name.
+
+3. Save the `.env` file.
 
 ## Usage
 
-1. Start the server by running `npm start` in the terminal.
-2. The server will be available at `http://localhost:3000` (or any other specified port).
-3. Use API testing tools like Postman or curl to perform CRUD operations on the Talkers database.
+To run the server and the required services using Docker Compose, execute the following command:
+
+```bash
+docker-compose up -d
+```
+
+This will start the backend server on port 3001 and set up the MySQL database container on the default port 3306 as specified in the `.env` file.
+
+To access the bash shell of the `talker_manager` container, run:
+
+```bash
+docker exec -it talker_manager bash
+```
+
+Once inside the container, you can interact with the server and database as needed.
 
 ## API Endpoints
 
