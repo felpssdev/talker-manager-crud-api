@@ -7,6 +7,7 @@ const checkAge = require('../middlewares/checkAge');
 const checkTalk = require('../middlewares/checkTalk');
 const { checkWatchedAt, filterByDateQuery } = require('../middlewares/checkWatchedAt');
 const { checkRate, filterByRateQuery, checkBodyRate } = require('../middlewares/checkRate');
+const getDataFromDb = require('../utils/db');
 
 const TALKER_FILE_PATH = join(__dirname, '..', 'talker.json');
 
@@ -15,6 +16,16 @@ const talkerRoute = express.Router();
 talkerRoute.get('/', async (_req, res) => {
   const data = await getData(TALKER_FILE_PATH);
   res.status(200).json(data);
+});
+
+talkerRoute.get('/db', async (_req, res) => {
+  try {
+    const data = await getDataFromDb();
+
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
 });
 
 talkerRoute
