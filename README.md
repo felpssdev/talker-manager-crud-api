@@ -142,7 +142,7 @@ A Talker object should have the following format:
   "age": 30,
   "talk": {
     "rate": 4,
-    "watchedAt": "2023-07-25"
+    "watchedAt": "25/07/2023"
   }
 }
 ```
