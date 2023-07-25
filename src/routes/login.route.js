@@ -12,8 +12,6 @@ loginRoute.post('/', (req, res) => {
 
   const randomID = crypto.randomBytes(16).toString('hex').slice(0, 16);
 
-  console.log(randomID.length);
-
   res.status(200).json({ token: randomID });
 });
 
